@@ -1,0 +1,57 @@
+from pyspark.sql import SparkSession
+
+query = f'''
+    WITH gd_row_numbers AS (
+        SELECT 
+            *,
+            ROW_NUMBER() OVER(PARTITION BY game_id, team_id, player_id ORDER BY game_id, team_id, player_id) AS row_num
+        FROM game_details --nba_game_details
+    )
+
+    SELECT 
+        game_id,
+        team_id,
+        team_abbreviation,
+        team_city,
+        player_id,
+        player_name,
+        nickname,
+        start_position,
+        `comment`,
+        `min`,
+        fgm,
+        fga,
+        fg_pct,
+        fg3m,
+        fg3a,
+        fg3_pct,
+        ftm,
+        fta,
+        ft_pct,
+        oreb,
+        dreb,
+        reb,
+        ast,
+        stl,
+        blk,
+        `TO`,
+        pf,
+        pts,
+        plus_minus
+    FROM gd_row_numbers 
+    WHERE row_num = 1;   
+'''
+
+def do_dedup_gamedetails(spark, dataframe):  
+    dataframe.createOrReplaceTempView("nba_game_details")
+    return spark.sql(query)
+
+def main():
+    spark = SparkSession.builder \
+        .master("local") \
+        .appName("dedup_gamedetails") \
+        .getOrCreate()
+    
+    output_df = do_dedup_gamedetails(spark, spark.table('nba_game_details')) 
+    output_df.write.mode('overwrite').insertInto('dedup_gamedetails_table')
+    
