@@ -5,7 +5,7 @@ query = f'''
         SELECT 
             *,
             ROW_NUMBER() OVER(PARTITION BY game_id, team_id, player_id ORDER BY game_id, team_id, player_id) AS row_num
-        FROM game_details --nba_game_details
+        FROM nba_game_details
     )
 
     SELECT 

@@ -20,7 +20,7 @@ schema = T.StructType([
     T.StructField("nickname", T.StringType()),
     T.StructField("start_position", T.StringType()),
     T.StructField("comment", T.StringType()),
-    T.StructField("min", T.StringType()),       # keep as STRING like '12:36'
+    T.StructField("min", T.StringType()),      
     T.StructField("fgm", T.DoubleType()),
     T.StructField("fga", T.DoubleType()),
     T.StructField("fg_pct", T.DoubleType()),
