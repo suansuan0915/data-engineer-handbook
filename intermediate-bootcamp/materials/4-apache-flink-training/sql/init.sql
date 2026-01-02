@@ -7,3 +7,5 @@ CREATE TABLE IF NOT EXISTS processed_events (
     url VARCHAR,
     geodata VARCHAR
 );
+
+select * from processed_events;
